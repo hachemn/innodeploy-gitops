@@ -4,11 +4,6 @@ metadata:
   name: innodeploy-app
   labels:
     app: innodeploy-app
-  annotations:
-    argocd-image-updater.argoproj.io/image-list: app=nourhenhachem/innodeploy-app
-    argocd-image-updater.argoproj.io/app.update-strategy: latest
-    argocd-image-updater.argoproj.io/write-back-method: git
-
 spec:
   replicas: 1
 
@@ -24,7 +19,7 @@ spec:
     spec:
       containers:
         - name: innodeploy-app
-          image: nourhenhachem/innodeploy-app:v1778018996
+          image: nourhenhachem/innodeploy-app:latest
           ports:
             - containerPort: 3000
 

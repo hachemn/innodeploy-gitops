@@ -4,5 +4,5 @@ resources:
   - deployment.yaml
 images:
   - name: nourhenhachem/innodeploy-app
-    newTag: v1778018996
+    newTag: v1778072691
     newName: nourhenhachem/innodeploy-app

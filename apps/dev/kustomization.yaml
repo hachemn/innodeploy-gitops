@@ -5,5 +5,5 @@ resources:
 nameSuffix: -dev
 images:
   - name: nourhenhachem/innodeploy-app
-    newTag: v1.0.2
+    newTag: v1.0.3
     newName: nourhenhachem/innodeploy-app

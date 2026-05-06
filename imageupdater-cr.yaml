@@ -1,0 +1,29 @@
+apiVersion: argocd-image-updater.argoproj.io/v1alpha1
+kind: ImageUpdater
+metadata:
+  name: innodeploy-updater
+  namespace: argocd
+spec:
+  commonUpdateSettings:
+    updateStrategy: newest-build
+    allowTags: "regexp:^v.*"
+  writeBackConfig:
+    method: "git:secret:argocd/git-creds"
+    gitConfig:
+      repository: "https://github.com/hachemn/innodeploy-gitops.git"
+      branch: "main"
+      writeBackTarget: "kustomization:k8s"
+  applicationRefs:
+    - namePattern: "innodeploy-app"
+      images:
+        - alias: "app"
+          imageName: "nourhenhachem/innodeploy-app:latest"
+          manifestTargets:
+            kustomize:
+              name: "nourhenhachem/innodeploy-app"
+      writeBackConfig:
+        method: "git:secret:argocd/git-creds"
+        gitConfig:
+          repository: "https://github.com/hachemn/innodeploy-gitops.git"
+          branch: "main"
+          writeBackTarget: "kustomization:."

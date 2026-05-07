@@ -1,0 +1,26 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+
+metadata:
+  name: innodeploy-alerts
+  namespace: monitoring
+  labels:
+    release: monitoring
+
+spec:
+  groups:
+    - name: innodeploy.rules
+
+      rules:
+        - alert: InnodeployAppDown
+
+          expr: up{job="innodeploy-app-dev"} == 0
+
+          for: 1m
+
+          labels:
+            severity: critical
+
+          annotations:
+            summary: "Innodeploy app is DOWN"
+            description: "Prometheus cannot reach the app for 1 minute"

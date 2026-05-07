@@ -4,6 +4,7 @@ resources:
   - deployment.yaml
   - service.yaml
   - servicemonitor.yaml
+  - prometheusrule.yaml
 images:
   - name: nourhenhachem/innodeploy-app
     newTag: v1778074256

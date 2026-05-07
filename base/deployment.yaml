@@ -16,6 +16,11 @@ spec:
       labels:
         app: innodeploy-app
 
+       annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "3000"
+
     spec:
       containers:
         - name: innodeploy-app

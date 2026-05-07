@@ -5,6 +5,10 @@ namespace: dev
 
 resources:
   - ../../base
+
+patchesStrategicMerge:
+  - deployment-patch.yaml
+
 nameSuffix: -dev
 images:
   - name: nourhenhachem/innodeploy-app

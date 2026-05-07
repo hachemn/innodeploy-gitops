@@ -14,7 +14,7 @@ spec:
       rules:
         - alert: InnodeployAppDown
 
-          expr: up{job="innodeploy-app-dev"} == 0
+          expr: up{service="innodeploy-app-dev", namespace="dev"} == 0
 
           for: 1m
 

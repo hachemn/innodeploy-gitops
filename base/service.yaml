@@ -2,6 +2,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: innodeploy-app
+  labels:
+    app: innodeploy-app
+
 spec:
   selector:
     app: innodeploy-app

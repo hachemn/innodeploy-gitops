@@ -5,4 +5,4 @@ metadata:
   name: innodeploy-app
 
 spec:
-  replicas: 0
+  replicas: 1

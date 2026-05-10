@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: Secret
+
+metadata:
+  name: alertmanager-monitoring-kube-prometheus-alertmanager
+  namespace: monitoring
+
+stringData:
+  alertmanager.yaml: |
+    global:
+      resolve_timeout: 5m
+
+      smtp_smarthost: 'smtp.gmail.com:587'
+      smtp_from: 'hachemnourhen8@gmail.com'
+      smtp_auth_username: 'hachemnourhen8@gmail.com'
+      smtp_auth_password: 'rpvh zoyx gwpw mfiw'
+      smtp_require_tls: true
+
+    route:
+      receiver: discord
+
+    receivers:
+      - name: discord
+
+        discord_configs:
+          - webhook_url: "https://discord.com/api/webhooks/1502017723067138148/ufZtiSP0tLnLvD1zkCno2T1sUH_3K4hejnAkRuR1v7leDZEJ9gPnGsSfTvHLXvbAObtd"
+
+            title: "🚨 InnoDeploy Alert"
+
+            message: |
+              🚨 ALERT FIRED 🚨
+
+              {{ range .Alerts }}
+
+              Alert:
+              {{ .Labels.alertname }}
+
+              Description:
+              {{ .Annotations.description }}
+
+              Severity:
+              {{ .Labels.severity }}
+
+              {{ end }}
+
+        email_configs:
+          - to: 'hachemnourhen8@gmail.com'
+
+            send_resolved: true
+
+            headers:
+              subject: '🚨 InnoDeploy Alert'
+
+            html: |
+              <h2>🚨 InnoDeploy Alert</h2>
+
+              {{ range .Alerts }}
+
+              <p><b>Alert:</b> {{ .Labels.alertname }}</p>
+
+              <p><b>Description:</b> {{ .Annotations.description }}</p>
+
+              <p><b>Severity:</b> {{ .Labels.severity }}</p>
+
+              <hr>
+
+              {{ end }}
+
+type: Opaque

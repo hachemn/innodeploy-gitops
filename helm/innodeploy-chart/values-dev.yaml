@@ -1,0 +1,20 @@
+replicaCount: 1
+
+image:
+  repository: nourhenhachem/innodeploy-app
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 3000
+
+ingress:
+  enabled: true
+  className: nginx
+
+  hosts:
+    - host: dev.local
+      paths:
+        - path: /
+          pathType: Prefix

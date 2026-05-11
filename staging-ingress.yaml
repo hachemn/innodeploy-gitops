@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: staging-ingress
+  namespace: staging
+
+spec:
+  ingressClassName: nginx
+
+  tls:
+  - hosts:
+    - staging.local
+    secretName: local-tls
+
+  rules:
+  - host: staging.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: innodeploy-app-staging
+            port:
+              number: 3000

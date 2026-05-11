@@ -2,13 +2,8 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 
 metadata:
-  name: innodeploy-app
+  name: helm-innodeploy
   namespace: argocd
-
-  annotations:
-    argocd-image-updater.argoproj.io/image-list: app=nourhenhachem/innodeploy-app
-    argocd-image-updater.argoproj.io/app.update-strategy: latest
-    argocd-image-updater.argoproj.io/write-back-method: git
 
 spec:
   project: default
@@ -16,16 +11,20 @@ spec:
   source:
     repoURL: https://github.com/hachemn/innodeploy-gitops.git
     targetRevision: main
-    path: apps/dev
+    path: helm/innodeploy-chart
+
+    helm:
+      valueFiles:
+        - values.yaml
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: dev
+    namespace: helm-argocd
 
   syncPolicy:
-    syncOptions:
-      - CreateNamespace=true
-
     automated:
       prune: true
       selfHeal: true
+
+    syncOptions:
+      - CreateNamespace=true

@@ -1,11 +1,19 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: Rollout
 metadata:
   name: {{ include "innodeploy-chart.fullname" . }}
   labels:
     {{- include "innodeploy-chart.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
+
+  strategy:
+    canary:
+      steps:
+        - setWeight: 20
+        - pause: { duration: 20 }
+        - setWeight: 50
+        - pause: { duration: 20 }
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:

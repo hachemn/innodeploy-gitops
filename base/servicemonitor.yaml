@@ -4,15 +4,16 @@ metadata:
   name: innodeploy-monitor
   namespace: monitoring
   labels:
-    release: monitoring
+    release: kube-prometheus-stack   # must match Prometheus operator label selector
 spec:
   namespaceSelector:
     matchNames:
-      - dev
+      - helm-dev                     # fixed: was "dev", your app runs in helm-dev
   selector:
     matchLabels:
-      app: innodeploy-app
+      app.kubernetes.io/name: innodeploy-chart   # fixed: Helm adds this label automatically
   endpoints:
     - port: http
       path: /metrics
       interval: 15s
+ 

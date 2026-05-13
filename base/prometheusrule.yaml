@@ -1,26 +1,70 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
-
 metadata:
   name: innodeploy-alerts
   namespace: monitoring
   labels:
-    release: monitoring
-
+    release: kube-prometheus-stack
 spec:
   groups:
     - name: innodeploy.rules
-
       rules:
+
         - alert: InnodeployAppDown
-
-          expr: absent(up{service="innodeploy-app-dev", namespace="dev"})
-
+          expr: |
+            absent(
+              up{
+                namespace="helm-dev",
+                service="helm-dev-innodeploy-chart"
+              }
+            )
           for: 1m
-
           labels:
             severity: critical
-
           annotations:
             summary: "Innodeploy app is DOWN"
-            description: "Prometheus cannot reach the app for 1 minute"
+            description: "Prometheus cannot reach the app in helm-dev for 1 minute"
+
+        - alert: InnodeployPodCrashLooping
+          expr: |
+            increase(
+              kube_pod_container_status_restarts_total{
+                namespace="helm-dev",
+                pod=~"helm-dev-innodeploy-chart.*"
+              }[15m]
+            ) > 3
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Pod {{ $labels.pod }} is crash-looping"
+            description: "Pod restarted more than 3 times in 15 minutes"
+
+        - alert: InnodeployNoReadyReplicas
+          expr: |
+            kube_deployment_status_replicas_available{
+              namespace="helm-dev",
+              deployment="helm-dev-innodeploy-chart"
+            } == 0
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "No ready replicas for innodeploy"
+            description: "Deployment helm-dev-innodeploy-chart has 0 available replicas"
+
+        - alert: InnodeployHighMemory
+          expr: |
+            sum(
+              container_memory_working_set_bytes{
+                namespace="helm-dev",
+                pod=~"helm-dev-innodeploy-chart.*",
+                container!=""
+              }
+            ) > 200 * 1024 * 1024
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Innodeploy memory usage is high"
+            description: "App is using more than 200MB of memory"

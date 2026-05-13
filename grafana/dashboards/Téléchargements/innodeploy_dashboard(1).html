@@ -1,0 +1,283 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+  .app { display: grid; grid-template-columns: 220px 1fr; min-height: 600px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; background: var(--color-background-primary); }
+  .sidebar { background: var(--color-background-secondary); border-right: 0.5px solid var(--color-border-tertiary); padding: 20px 0; display: flex; flex-direction: column; gap: 4px; }
+  .logo { padding: 0 16px 20px; display: flex; align-items: center; gap: 10px; border-bottom: 0.5px solid var(--color-border-tertiary); margin-bottom: 8px; }
+  .logo-icon { width: 28px; height: 28px; background: #3B6D11; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+  .logo-icon svg { width: 16px; height: 16px; }
+  .logo-name { font-size: 15px; font-weight: 500; color: var(--color-text-primary); }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 16px; font-size: 13px; cursor: pointer; border-radius: 0; transition: background 0.1s; color: var(--color-text-secondary); }
+  .nav-item:hover { background: var(--color-background-primary); color: var(--color-text-primary); }
+  .nav-item.active { background: var(--color-background-primary); color: var(--color-text-primary); font-weight: 500; border-right: 2px solid #3B6D11; }
+  .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: 0.4; flex-shrink: 0; }
+  .nav-section { padding: 12px 16px 4px; font-size: 11px; font-weight: 500; color: var(--color-text-tertiary); letter-spacing: 0.05em; text-transform: uppercase; }
+  .main { display: flex; flex-direction: column; overflow: hidden; }
+  .topbar { padding: 16px 24px; border-bottom: 0.5px solid var(--color-border-tertiary); display: flex; align-items: center; justify-content: space-between; }
+  .topbar-title { font-size: 15px; font-weight: 500; color: var(--color-text-primary); }
+  .topbar-actions { display: flex; align-items: center; gap: 8px; }
+  .btn { padding: 6px 12px; font-size: 12px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); cursor: pointer; background: transparent; color: var(--color-text-primary); transition: background 0.1s; }
+  .btn:hover { background: var(--color-background-secondary); }
+  .btn-primary { background: #3B6D11; color: #C0DD97; border-color: #3B6D11; }
+  .btn-primary:hover { background: #27500A; }
+  .content { padding: 20px 24px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 16px; }
+  .metrics-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  .metric-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 14px 16px; }
+  .metric-label { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 6px; }
+  .metric-value { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+  .metric-sub { font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; }
+  .metric-up { color: #3B6D11; }
+  .metric-down { color: #A32D2D; }
+  .section-title { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 10px; }
+  .pipelines-table { width: 100%; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; }
+  .pt-head { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 80px; padding: 8px 16px; background: var(--color-background-secondary); border-bottom: 0.5px solid var(--color-border-tertiary); font-size: 11px; font-weight: 500; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.04em; }
+  .pt-row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 80px; padding: 10px 16px; border-bottom: 0.5px solid var(--color-border-tertiary); align-items: center; transition: background 0.1s; cursor: pointer; }
+  .pt-row:last-child { border-bottom: none; }
+  .pt-row:hover { background: var(--color-background-secondary); }
+  .pt-name { font-size: 13px; font-weight: 500; color: var(--color-text-primary); display: flex; align-items: center; gap: 8px; }
+  .pt-branch { font-size: 11px; color: var(--color-text-tertiary); font-family: var(--font-mono); }
+  .pt-cell { font-size: 12px; color: var(--color-text-secondary); }
+  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+  .badge-success { background: #EAF3DE; color: #27500A; }
+  .badge-running { background: #E6F1FB; color: #0C447C; }
+  .badge-fail { background: #FCEBEB; color: #791F1F; }
+  .badge-queued { background: var(--color-background-secondary); color: var(--color-text-secondary); border: 0.5px solid var(--color-border-secondary); }
+  .pulse { width: 6px; height: 6px; border-radius: 50%; background: #378ADD; display: inline-block; animation: pulse-anim 1.2s ease-in-out infinite; }
+  @keyframes pulse-anim { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(0.8)} }
+  .dot-ok { width: 6px; height: 6px; border-radius: 50%; background: #639922; display: inline-block; }
+  .dot-fail { width: 6px; height: 6px; border-radius: 50%; background: #E24B4A; display: inline-block; }
+  .bottom-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .card { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; }
+  .card-header { padding: 12px 16px; border-bottom: 0.5px solid var(--color-border-tertiary); display: flex; align-items: center; justify-content: space-between; }
+  .card-header-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+  .card-body { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .alert-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 10px; border-radius: var(--border-radius-md); background: var(--color-background-secondary); }
+  .alert-icon { width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0; margin-top: 1px; }
+  .alert-icon-warn { background: #FAEEDA; color: #854F0B; }
+  .alert-icon-ok { background: #EAF3DE; color: #3B6D11; }
+  .alert-icon-crit { background: #FCEBEB; color: #791F1F; }
+  .alert-text { font-size: 12px; color: var(--color-text-primary); line-height: 1.4; }
+  .alert-time { font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; }
+  .env-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; border-radius: var(--border-radius-md); background: var(--color-background-secondary); }
+  .env-name { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+  .env-url { font-size: 11px; color: var(--color-text-info); font-family: var(--font-mono); margin-top: 2px; }
+  .env-right { display: flex; align-items: center; gap: 10px; }
+  .env-ver { font-size: 11px; color: var(--color-text-tertiary); font-family: var(--font-mono); }
+  .progress-bar { height: 3px; background: var(--color-border-tertiary); border-radius: 2px; overflow: hidden; margin-top: 6px; }
+  .progress-fill { height: 100%; border-radius: 2px; background: #378ADD; animation: progress 3s ease-in-out infinite; }
+  @keyframes progress { 0%{width:20%} 60%{width:85%} 100%{width:100%} }
+</style>
+
+<div class="app">
+  <div class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M3 8L7 12L13 4" stroke="#C0DD97" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <span class="logo-name">InnoDeploy</span>
+    </div>
+    <div class="nav-section">Overview</div>
+    <div class="nav-item active"><div class="nav-dot"></div>Dashboard</div>
+    <div class="nav-item"><div class="nav-dot"></div>Projets</div>
+    <div class="nav-item"><div class="nav-dot"></div>Environnements</div>
+    <div class="nav-section">CI / CD</div>
+    <div class="nav-item"><div class="nav-dot"></div>Pipelines</div>
+    <div class="nav-item"><div class="nav-dot"></div>Builds</div>
+    <div class="nav-item"><div class="nav-dot"></div>Déploiements</div>
+    <div class="nav-section">Monitoring</div>
+    <div class="nav-item"><div class="nav-dot"></div>Métriques</div>
+    <div class="nav-item"><div class="nav-dot"></div>Logs</div>
+    <div class="nav-item"><div class="nav-dot"></div>Alertes <span style="margin-left:auto;background:#FCEBEB;color:#791F1F;font-size:10px;padding:1px 6px;border-radius:10px;">2</span></div>
+    <div style="flex:1"></div>
+    <div class="nav-section">Organisation</div>
+    <div class="nav-item"><div class="nav-dot"></div>Équipe</div>
+    <div class="nav-item"><div class="nav-dot"></div>Paramètres</div>
+  </div>
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title">Vue d'ensemble</div>
+        <div style="font-size:12px;color:var(--color-text-tertiary);margin-top:2px;">Organisation InnoVibe · 4 projets actifs</div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn">Exporter</button>
+        <button class="btn-primary btn">+ Nouveau pipeline</button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="metrics-row">
+        <div class="metric-card">
+          <div class="metric-label">Déploiements (7j)</div>
+          <div class="metric-value">143</div>
+          <div class="metric-sub metric-up">↑ +18% vs semaine précédente</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Taux de succès</div>
+          <div class="metric-value">97.2%</div>
+          <div class="metric-sub metric-up">↑ +1.4pts</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Temps moyen de build</div>
+          <div class="metric-value">2m 14s</div>
+          <div class="metric-sub metric-down">↑ +12s vs hier</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Disponibilité globale</div>
+          <div class="metric-value">99.9%</div>
+          <div class="metric-sub metric-up">3 services en ligne</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title">Pipelines récents</div>
+        <div class="pipelines-table">
+          <div class="pt-head">
+            <div>Projet / Branche</div>
+            <div>Statut</div>
+            <div>Durée</div>
+            <div>Déclenché par</div>
+            <div></div>
+          </div>
+          <div class="pt-row">
+            <div class="pt-name">
+              <div class="pulse"></div>
+              <div>
+                <div>innov-api</div>
+                <div class="pt-branch">main · #204</div>
+              </div>
+            </div>
+            <div class="pt-cell"><span class="badge badge-running">En cours</span></div>
+            <div class="pt-cell">1m 42s…</div>
+            <div class="pt-cell">karim@innov</div>
+            <div class="pt-cell"><button class="btn" style="font-size:11px;padding:4px 8px;">Logs</button></div>
+          </div>
+          <div class="pt-row">
+            <div class="pt-name">
+              <div class="dot-ok"></div>
+              <div>
+                <div>inno-front</div>
+                <div class="pt-branch">feat/onboarding · #87</div>
+              </div>
+            </div>
+            <div class="pt-cell"><span class="badge badge-success">Succès</span></div>
+            <div class="pt-cell">1m 58s</div>
+            <div class="pt-cell">sara@innov</div>
+            <div class="pt-cell"><button class="btn" style="font-size:11px;padding:4px 8px;">Logs</button></div>
+          </div>
+          <div class="pt-row">
+            <div class="pt-name">
+              <div class="dot-fail"></div>
+              <div>
+                <div>innov-worker</div>
+                <div class="pt-branch">main · #61</div>
+              </div>
+            </div>
+            <div class="pt-cell"><span class="badge badge-fail">Échec</span></div>
+            <div class="pt-cell">3m 07s</div>
+            <div class="pt-cell">push auto</div>
+            <div class="pt-cell"><button class="btn" style="font-size:11px;padding:4px 8px;">Logs</button></div>
+          </div>
+          <div class="pt-row">
+            <div class="pt-name">
+              <div class="dot-ok"></div>
+              <div>
+                <div>innov-analytics</div>
+                <div class="pt-branch">release/v2.1 · #33</div>
+              </div>
+            </div>
+            <div class="pt-cell"><span class="badge badge-success">Succès</span></div>
+            <div class="pt-cell">2m 21s</div>
+            <div class="pt-cell">merge PR #91</div>
+            <div class="pt-cell"><button class="btn" style="font-size:11px;padding:4px 8px;">Logs</button></div>
+          </div>
+          <div class="pt-row">
+            <div class="pt-name">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--color-text-tertiary);opacity:0.5;display:inline-block;"></div>
+              <div>
+                <div>inno-front</div>
+                <div class="pt-branch">main · #86</div>
+              </div>
+            </div>
+            <div class="pt-cell"><span class="badge badge-queued">En attente</span></div>
+            <div class="pt-cell">—</div>
+            <div class="pt-cell">schedule</div>
+            <div class="pt-cell"><button class="btn" style="font-size:11px;padding:4px 8px;">Annuler</button></div>
+          </div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill"></div></div>
+        <div style="font-size:11px;color:var(--color-text-tertiary);margin-top:4px;">Pipeline innov-api #204 en cours · étape 3/5 — Tests unitaires</div>
+      </div>
+
+      <div class="bottom-row">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-header-title">Alertes actives</span>
+            <span class="badge badge-fail" style="font-size:10px;">2 critiques</span>
+          </div>
+          <div class="card-body">
+            <div class="alert-item">
+              <div class="alert-icon alert-icon-crit">!</div>
+              <div>
+                <div class="alert-text">innov-worker · Taux d'erreur > 5% (actuellement 7.3%)</div>
+                <div class="alert-time">Il y a 4 min · Non acquittée</div>
+              </div>
+            </div>
+            <div class="alert-item">
+              <div class="alert-icon alert-icon-warn">~</div>
+              <div>
+                <div class="alert-text">innov-api · Temps de réponse P95 > 450ms</div>
+                <div class="alert-time">Il y a 18 min · Slack #ops notifié</div>
+              </div>
+            </div>
+            <div class="alert-item">
+              <div class="alert-icon alert-icon-ok">✓</div>
+              <div>
+                <div class="alert-text">innov-analytics · Retour à la normale</div>
+                <div class="alert-time">Il y a 1h · Résolue automatiquement</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-header-title">Environnements</span>
+            <span style="font-size:11px;color:var(--color-text-tertiary);">3 actifs</span>
+          </div>
+          <div class="card-body">
+            <div class="env-item">
+              <div>
+                <div class="env-name">Production</div>
+                <div class="env-url">api.innovibe.io</div>
+              </div>
+              <div class="env-right">
+                <span class="env-ver">v2.0.14</span>
+                <span class="badge badge-success">En ligne</span>
+              </div>
+            </div>
+            <div class="env-item">
+              <div>
+                <div class="env-name">Staging</div>
+                <div class="env-url">staging.innovibe.io</div>
+              </div>
+              <div class="env-right">
+                <span class="env-ver">v2.1.0-rc2</span>
+                <span class="badge badge-success">En ligne</span>
+              </div>
+            </div>
+            <div class="env-item">
+              <div>
+                <div class="env-name">Preview · PR #91</div>
+                <div class="env-url">pr-91.preview.io</div>
+              </div>
+              <div class="env-right">
+                <span class="env-ver">feat/onb</span>
+                <span class="badge badge-running">Actif</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

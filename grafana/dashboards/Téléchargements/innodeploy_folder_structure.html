@@ -1,0 +1,76 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.tree { font-family: var(--font-mono); font-size: 12.5px; line-height: 1.8; color: var(--color-text-primary); padding: 16px 20px; background: var(--color-background-secondary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); }
+.d  { color: #185FA5; font-weight: 500; }
+.f  { color: var(--color-text-primary); }
+.cm { color: var(--color-text-tertiary); font-style: italic; }
+.indent1 { padding-left: 20px; }
+.indent2 { padding-left: 40px; }
+.indent3 { padding-left: 60px; }
+.indent4 { padding-left: 80px; }
+.sep { border-top: 0.5px solid var(--color-border-tertiary); margin: 10px 0; }
+</style>
+<div class="tree">
+<div><span class="d">innodeploy/</span> <span class="cm">← monorepo racine</span></div>
+<div class="indent1"><span class="d">backend/</span> <span class="cm">← tous les services Go</span></div>
+<div class="indent2"><span class="d">cmd/</span></div>
+<div class="indent3"><span class="d">api-gateway/</span> <span class="f">main.go</span></div>
+<div class="indent3"><span class="d">pipeline-service/</span> <span class="f">main.go</span></div>
+<div class="indent3"><span class="d">deploy-service/</span> <span class="f">main.go</span></div>
+<div class="indent3"><span class="d">monitor-service/</span> <span class="f">main.go</span></div>
+<div class="indent3"><span class="d">alert-service/</span> <span class="f">main.go</span></div>
+<div class="indent2"><span class="d">internal/</span> <span class="cm">← code partagé privé</span></div>
+<div class="indent3"><span class="d">auth/</span> <span class="f">jwt.go · middleware.go</span></div>
+<div class="indent3"><span class="d">db/</span> <span class="f">postgres.go · redis.go</span></div>
+<div class="indent3"><span class="d">queue/</span> <span class="f">producer.go · consumer.go</span></div>
+<div class="indent3"><span class="d">runner/</span> <span class="f">build.go · docker.go</span></div>
+<div class="indent3"><span class="d">notifier/</span> <span class="f">slack.go · email.go</span></div>
+<div class="indent3"><span class="d">models/</span> <span class="f">user.go · project.go · pipeline.go · deployment.go</span></div>
+<div class="indent2"><span class="d">pkg/</span> <span class="cm">← packages réutilisables (exportables)</span></div>
+<div class="indent3"><span class="d">config/</span> <span class="f">config.go</span> <span class="cm">← viper / env vars</span></div>
+<div class="indent3"><span class="d">logger/</span> <span class="f">logger.go</span> <span class="cm">← zap ou slog</span></div>
+<div class="indent3"><span class="d">errors/</span> <span class="f">errors.go</span></div>
+<div class="indent2"><span class="d">migrations/</span> <span class="f">001_init.up.sql · 001_init.down.sql · …</span></div>
+<div class="indent2"><span class="f">go.mod · go.sum · Makefile</span></div>
+
+<div class="sep"></div>
+
+<div class="indent1"><span class="d">frontend/</span> <span class="cm">← Next.js 14 App Router</span></div>
+<div class="indent2"><span class="d">app/</span></div>
+<div class="indent3"><span class="d">(auth)/</span> <span class="f">login/ · register/</span></div>
+<div class="indent3"><span class="d">(dashboard)/</span></div>
+<div class="indent4"><span class="d">projects/</span> <span class="f">page.tsx · [id]/</span></div>
+<div class="indent4"><span class="d">pipelines/</span> <span class="f">page.tsx · [id]/logs/</span></div>
+<div class="indent4"><span class="d">deployments/</span> <span class="f">page.tsx</span></div>
+<div class="indent4"><span class="d">monitoring/</span> <span class="f">page.tsx</span></div>
+<div class="indent4"><span class="d">alerts/</span> <span class="f">page.tsx</span></div>
+<div class="indent4"><span class="d">settings/</span> <span class="f">page.tsx</span></div>
+<div class="indent3"><span class="d">api/</span> <span class="f">auth/ · webhooks/</span> <span class="cm">← Next.js route handlers</span></div>
+<div class="indent2"><span class="d">components/</span></div>
+<div class="indent3"><span class="d">ui/</span> <span class="f">button · input · badge · card · …</span></div>
+<div class="indent3"><span class="d">dashboard/</span> <span class="f">pipeline-row · build-log · metric-chart</span></div>
+<div class="indent2"><span class="d">lib/</span> <span class="f">api.ts · auth.ts · ws.ts</span> <span class="cm">← client API + WebSocket</span></div>
+<div class="indent2"><span class="d">hooks/</span> <span class="f">usePipeline.ts · useLogs.ts · useMetrics.ts</span></div>
+<div class="indent2"><span class="f">package.json · tailwind.config.ts · next.config.ts</span></div>
+
+<div class="sep"></div>
+
+<div class="indent1"><span class="d">infra/</span></div>
+<div class="indent2"><span class="d">docker/</span> <span class="f">Dockerfile.api · Dockerfile.worker · Dockerfile.front</span></div>
+<div class="indent2"><span class="d">k8s/</span> <span class="f">namespace.yaml · api-deploy.yaml · services.yaml</span></div>
+<div class="indent2"><span class="f">docker-compose.yml</span> <span class="cm">← env local complet</span></div>
+<div class="indent2"><span class="f">docker-compose.dev.yml</span> <span class="cm">← hot reload</span></div>
+
+<div class="sep"></div>
+
+<div class="indent1"><span class="d">docs/</span></div>
+<div class="indent2"><span class="f">architecture.md · api-spec.yaml</span> <span class="cm">← OpenAPI 3.0</span></div>
+<div class="indent2"><span class="f">innodeploy.yml.example</span> <span class="cm">← config pipeline utilisateur</span></div>
+
+<div class="sep"></div>
+
+<div class="indent1"><span class="f">.github/workflows/</span> <span class="cm">← CI du projet lui-même</span></div>
+<div class="indent1"><span class="f">Makefile</span> <span class="cm">← make dev · make build · make test · make migrate</span></div>
+<div class="indent1"><span class="f">.env.example · README.md</span></div>
+</div>

@@ -1,19 +1,17 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: innodeploy-monitor
+  name: innodeploy-app
   namespace: monitoring
-  labels:
-    release: kube-prometheus-stack   # must match Prometheus operator label selector
 spec:
-  namespaceSelector:
-    matchNames:
-      - helm-dev                     # fixed: was "dev", your app runs in helm-dev
   selector:
     matchLabels:
-      app.kubernetes.io/name: innodeploy-chart   # fixed: Helm adds this label automatically
+      app.kubernetes.io/name: innodeploy-chart
+      app.kubernetes.io/instance: helm-dev
+  namespaceSelector:
+    matchNames:
+      - helm-dev
   endpoints:
     - port: http
       path: /metrics
       interval: 15s
- 

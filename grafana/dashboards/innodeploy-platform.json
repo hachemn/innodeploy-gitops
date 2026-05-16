@@ -4,7 +4,7 @@
   "metadata": {
     "name": "adbgcm4",
     "namespace": "default",
-    "uid": "d92b2b11-0889-41be-8d8f-2c70ea744c1e",
+    "uid": "prometheus",
     "resourceVersion": "1778714440812997",
     "generation": 8,
     "creationTimestamp": "2026-05-13T22:42:09Z",
@@ -63,11 +63,11 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "type": "prometheus", "uid": "prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
-                        "expr": "kube_deployment_status_replicas_available{namespace=\"helm-dev\"}",
+                        "expr": "kube_deployment_status_replicas_available{namespace=\"dev\"}",
                         "legendFormat": "__auto",
                         "range": true
                       }
@@ -151,11 +151,11 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "type": "prometheus", "uid": "prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
-                        "expr": "sum(\n  increase(\n    kube_pod_container_status_restarts_total{namespace=\"helm-dev\"}[1h]\n  )\n)",
+                        "expr": "sum(\n  increase(\n    kube_pod_container_status_restarts_total{namespace=\"dev\"}[1h]\n  )\n)",
                         "legendFormat": "__auto",
                         "range": true
                       }
@@ -239,11 +239,11 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "type": "prometheus", "uid": "prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
-                        "expr": "count(kube_pod_status_phase{namespace=\"helm-dev\", phase=\"Running\"})",
+                        "expr": "count(kube_pod_status_phase{namespace=\"dev\", phase=\"Running\"})",
                         "legendFormat": "__auto",
                         "range": true
                       }
@@ -327,11 +327,11 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "type": "prometheus", "uid": "prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
-                        "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"helm-dev\", container!=\"POD\"}[2m])) by (pod)",
+                        "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"dev\", container!=\"POD\"}[2m])) by (pod)",
                         "legendFormat": "__auto",
                         "range": true
                       }
@@ -446,11 +446,11 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "type": "prometheus", "uid": "prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
-                        "expr": "sum(container_memory_working_set_bytes{namespace=\"helm-dev\"}) by (pod)",
+                        "expr": "sum(container_memory_working_set_bytes{namespace=\"dev\"}) by (pod)",
                         "legendFormat": "__auto",
                         "range": true
                       }
@@ -565,7 +565,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "type": "prometheus", "uid": "prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -665,7 +665,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "type": "prometheus", "uid": "prometheus"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -765,7 +765,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "name": "PBFA97CFB590B2093"
+                        "type": "prometheus", "uid": "prometheus"
                       },
                       "spec": {
                         "editorMode": "code",

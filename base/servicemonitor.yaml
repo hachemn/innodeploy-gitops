@@ -6,13 +6,12 @@ metadata:
   labels:
     release: kube-prometheus-stack
 spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: innodeploy-chart
-      app.kubernetes.io/instance: helm-dev
   namespaceSelector:
     matchNames:
-      - helm-dev
+      - dev
+  selector:
+    matchLabels:
+      app: innodeploy-app
   endpoints:
     - port: http
       path: /metrics

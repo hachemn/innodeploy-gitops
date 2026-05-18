@@ -75,3 +75,13 @@
     - name: Show Grafana password
       debug:
         msg: "Grafana password: {{ grafana_password.stdout }}"
+
+    - name: Apply ServiceMonitor
+      shell: kubectl apply -f ~/innodeploy/innodeploy-gitops/base/servicemonitor.yaml
+
+    - name: Fix Grafana datasource
+      shell: |
+        PROM_IP=$(kubectl get svc kube-prometheus-stack-prometheus -n monitoring -o jsonpath='{.spec.clusterIP}')
+        kubectl patch configmap kube-prometheus-stack-grafana-datasource -n monitoring --type='json' \
+          -p="[{\"op\": \"replace\", \"path\": \"/data/datasource.yaml\", \"value\": \"apiVersion: 1\ndatasources:\n- name: Prometheus\n  type: prometheus\n  url: http://${PROM_IP}:9090\n  access: proxy\n  isDefault: true\n\"}]"
+        kubectl rollout restart deployment/kube-prometheus-stack-grafana -n monitoring

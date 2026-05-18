@@ -2,21 +2,21 @@
   "apiVersion": "dashboard.grafana.app/v2",
   "kind": "Dashboard",
   "metadata": {
-    "name": "adbgcm4",
+    "name": "adgw7vl",
     "namespace": "default",
-    "uid": "prometheus",
-    "resourceVersion": "1778714440812997",
+    "uid": "579435fb-1397-45a6-ba9b-173544ce5ff6",
+    "resourceVersion": "1779108707437017",
     "generation": 8,
-    "creationTimestamp": "2026-05-13T22:42:09Z",
+    "creationTimestamp": "2026-05-18T12:37:25Z",
     "labels": {
-      "grafana.app/deprecatedInternalID": "1052280326017024"
+      "grafana.app/deprecatedInternalID": "2712032239190016"
     },
     "annotations": {
-      "grafana.app/createdBy": "user:dflzbpka2cl4wf",
+      "grafana.app/createdBy": "user:dfmfn5bj153wgb",
       "grafana.app/folder": "",
-      "grafana.app/saved-from-ui": "Grafana v13.0.1 (a100054f)",
-      "grafana.app/updatedBy": "user:dflzbpka2cl4wf",
-      "grafana.app/updatedTimestamp": "2026-05-13T23:20:40Z"
+      "grafana.app/saved-from-ui": "Grafana v13.0.1+security-01 (9bbe672d)",
+      "grafana.app/updatedBy": "user:dfmfn5bj153wgb",
+      "grafana.app/updatedTimestamp": "2026-05-18T12:51:47Z"
     }
   },
   "spec": {
@@ -63,7 +63,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "type": "prometheus", "uid": "prometheus"
+                        "name": "PBFA97CFB590B2093"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -84,7 +84,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "stat",
-            "version": "13.0.1",
+            "version": "13.0.1+security-01",
             "spec": {
               "options": {
                 "colorMode": "value",
@@ -94,7 +94,7 @@
                 "percentChangeColorMode": "standard",
                 "reduceOptions": {
                   "calcs": [
-                    "last"
+                    "lastNotNull"
                   ],
                   "fields": "",
                   "values": false
@@ -115,15 +115,11 @@
                       {
                         "value": 0,
                         "color": "red"
-                      },
-                      {
-                        "value": 1,
-                        "color": "green"
                       }
                     ]
                   },
                   "color": {
-                    "mode": "palette-classic"
+                    "mode": "thresholds"
                   }
                 },
                 "overrides": []
@@ -151,11 +147,11 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "type": "prometheus", "uid": "prometheus"
+                        "name": "PBFA97CFB590B2093"
                       },
                       "spec": {
                         "editorMode": "code",
-                        "expr": "sum(\n  increase(\n    kube_pod_container_status_restarts_total{namespace=\"dev\"}[1h]\n  )\n)",
+                        "expr": "sum(increase(kube_pod_container_status_restarts_total{namespace=\"dev\"}[1h]))",
                         "legendFormat": "__auto",
                         "range": true
                       }
@@ -172,7 +168,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "stat",
-            "version": "13.0.1",
+            "version": "13.0.1+security-01",
             "spec": {
               "options": {
                 "colorMode": "value",
@@ -211,7 +207,7 @@
                     ]
                   },
                   "color": {
-                    "mode": "palette-classic"
+                    "mode": "thresholds"
                   }
                 },
                 "overrides": []
@@ -239,7 +235,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "type": "prometheus", "uid": "prometheus"
+                        "name": "PBFA97CFB590B2093"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -260,7 +256,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "stat",
-            "version": "13.0.1",
+            "version": "13.0.1+security-01",
             "spec": {
               "options": {
                 "colorMode": "value",
@@ -299,7 +295,7 @@
                     ]
                   },
                   "color": {
-                    "mode": "palette-classic"
+                    "mode": "thresholds"
                   }
                 },
                 "overrides": []
@@ -327,7 +323,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "type": "prometheus", "uid": "prometheus"
+                        "name": "PBFA97CFB590B2093"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -348,7 +344,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "timeseries",
-            "version": "13.0.1",
+            "version": "13.0.1+security-01",
             "spec": {
               "options": {
                 "annotations": {
@@ -369,7 +365,6 @@
               },
               "fieldConfig": {
                 "defaults": {
-                  "unit": "percentunit",
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
@@ -384,7 +379,7 @@
                     ]
                   },
                   "color": {
-                    "mode": "palette-classic"
+                    "mode": "thresholds"
                   },
                   "custom": {
                     "axisBorderShow": false,
@@ -446,7 +441,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "type": "prometheus", "uid": "prometheus"
+                        "name": "PBFA97CFB590B2093"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -467,7 +462,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "timeseries",
-            "version": "13.0.1",
+            "version": "13.0.1+security-01",
             "spec": {
               "options": {
                 "annotations": {
@@ -565,11 +560,11 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "type": "prometheus", "uid": "prometheus"
+                        "name": "PBFA97CFB590B2093"
                       },
                       "spec": {
                         "editorMode": "code",
-                        "expr": "1 - avg(rate(node_cpu_seconds_total{mode=\"idle\"}[2m]))\n",
+                        "expr": "1 - avg(rate(node_cpu_seconds_total{mode=\"idle\"}[2m]))",
                         "legendFormat": "__auto",
                         "range": true
                       }
@@ -586,7 +581,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "gauge",
-            "version": "13.0.1",
+            "version": "13.0.1+security-01",
             "spec": {
               "options": {
                 "barShape": "flat",
@@ -637,7 +632,7 @@
                     ]
                   },
                   "color": {
-                    "mode": "palette-classic"
+                    "mode": "thresholds"
                   }
                 },
                 "overrides": []
@@ -665,7 +660,7 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "type": "prometheus", "uid": "prometheus"
+                        "name": "PBFA97CFB590B2093"
                       },
                       "spec": {
                         "editorMode": "code",
@@ -686,7 +681,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "gauge",
-            "version": "13.0.1",
+            "version": "13.0.1+security-01",
             "spec": {
               "options": {
                 "barShape": "flat",
@@ -737,7 +732,7 @@
                     ]
                   },
                   "color": {
-                    "mode": "palette-classic"
+                    "mode": "thresholds"
                   }
                 },
                 "overrides": []
@@ -765,11 +760,11 @@
                       "group": "prometheus",
                       "version": "v0",
                       "datasource": {
-                        "type": "prometheus", "uid": "prometheus"
+                        "name": "PBFA97CFB590B2093"
                       },
                       "spec": {
                         "editorMode": "code",
-                        "expr": "rate(http_requests_total{job=\"innodeploy-innodeploy-chart\"}[2m])",
+                        "expr": "rate(http_requests_total{job=\"innodeploy-app-dev\"}[5m])",
                         "legendFormat": "__auto",
                         "range": true
                       }
@@ -786,7 +781,7 @@
           "vizConfig": {
             "kind": "VizConfig",
             "group": "timeseries",
-            "version": "13.0.1",
+            "version": "13.0.1+security-01",
             "spec": {
               "options": {
                 "annotations": {

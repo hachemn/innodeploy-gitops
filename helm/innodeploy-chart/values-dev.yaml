@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: nourhenhachem/innodeploy-app
-  tag: v1779139891
+  tag: v1779144982
   pullPolicy: Always
 
 service:

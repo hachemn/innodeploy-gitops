@@ -4,19 +4,17 @@
   "metadata": {
     "name": "adgw7vl",
     "namespace": "default",
-    "uid": "579435fb-1397-45a6-ba9b-173544ce5ff6",
-    "resourceVersion": "1779108707437017",
-    "generation": 8,
-    "creationTimestamp": "2026-05-18T12:37:25Z",
+    "uid": "f313e024-74b1-46b9-b107-f25ede9c52b2",
+    "resourceVersion": "1779192413993007",
+    "generation": 1,
+    "creationTimestamp": "2026-05-19T12:06:53Z",
     "labels": {
-      "grafana.app/deprecatedInternalID": "2712032239190016"
+      "grafana.app/deprecatedInternalID": "3066739137105920"
     },
     "annotations": {
-      "grafana.app/createdBy": "user:dfmfn5bj153wgb",
+      "grafana.app/createdBy": "user:dfmj51nt92dxcd",
       "grafana.app/folder": "",
-      "grafana.app/saved-from-ui": "Grafana v13.0.1+security-01 (9bbe672d)",
-      "grafana.app/updatedBy": "user:dfmfn5bj153wgb",
-      "grafana.app/updatedTimestamp": "2026-05-18T12:51:47Z"
+      "grafana.app/saved-from-ui": "Grafana v13.0.1+security-01 (9bbe672d)"
     }
   },
   "spec": {

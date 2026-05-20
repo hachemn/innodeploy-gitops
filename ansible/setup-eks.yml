@@ -85,3 +85,11 @@
         kubectl patch configmap kube-prometheus-stack-grafana-datasource -n monitoring --type='json' \
           -p="[{\"op\": \"replace\", \"path\": \"/data/datasource.yaml\", \"value\": \"apiVersion: 1\ndatasources:\n- name: Prometheus\n  type: prometheus\n  url: http://${PROM_IP}:9090\n  access: proxy\n  isDefault: true\n\"}]"
         kubectl rollout restart deployment/kube-prometheus-stack-grafana -n monitoring
+
+    - name: Apply Alertmanager config
+      shell: |
+        kubectl delete secret alertmanager-kube-prometheus-stack-alertmanager -n monitoring --ignore-not-found
+        cat ~/innodeploy/innodeploy-gitops/alertmanager-config.yaml | \
+          sed 's/alertmanager-monitoring-kube-prometheus-alertmanager/alertmanager-kube-prometheus-stack-alertmanager/' | \
+          kubectl apply -f -
+        kubectl rollout restart statefulset/alertmanager-kube-prometheus-stack-alertmanager -n monitoring

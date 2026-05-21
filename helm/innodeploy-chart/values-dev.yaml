@@ -1,20 +1,23 @@
 replicaCount: 1
-
 image:
   repository: nourhenhachem/innodeploy-app
   tag: v1779144982
   pullPolicy: Always
-
 service:
   type: ClusterIP
   port: 3000
-
 ingress:
   enabled: true
   className: nginx
-
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
   hosts:
-    - host: dev.local
+    - host: app.3.228.22.32.nip.io
       paths:
         - path: /
           pathType: Prefix
+  tls:
+    - secretName: innodeploy-tls
+      hosts:
+        - app.3.228.22.32.nip.io

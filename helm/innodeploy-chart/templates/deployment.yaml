@@ -1,5 +1,6 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
+
 metadata:
   name: {{ include "innodeploy-chart.fullname" . }}
   labels:
@@ -8,13 +9,7 @@ metadata:
 spec:
   replicas: {{ .Values.replicaCount }}
 
-  strategy:
-    canary:
-      steps:
-        - setWeight: 20
-        - pause: { duration: 20 }
-        - setWeight: 50
-        - pause: { duration: 20 }
+  revisionHistoryLimit: 2
 
   selector:
     matchLabels:

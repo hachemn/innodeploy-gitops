@@ -14,8 +14,8 @@ spec:
           expr: |
             absent(
               up{
-                namespace="helm-dev",
-                service="helm-dev-innodeploy-chart"
+                namespace="dev",
+                service="innodeploy-app-innodeploy-chart"
               }
             )
           for: 1m
@@ -29,8 +29,8 @@ spec:
           expr: |
             increase(
               kube_pod_container_status_restarts_total{
-                namespace="helm-dev",
-                pod=~"helm-dev-innodeploy-chart.*"
+                namespace="dev",
+                pod=~"innodeploy-app-innodeploy-chart.*"
               }[15m]
             ) > 3
           for: 5m
@@ -43,22 +43,22 @@ spec:
         - alert: InnodeployNoReadyReplicas
           expr: |
             kube_deployment_status_replicas_available{
-              namespace="helm-dev",
-              deployment="helm-dev-innodeploy-chart"
+              namespace="dev",
+              deployment="innodeploy-app-innodeploy-chart"
             } == 0
           for: 1m
           labels:
             severity: critical
           annotations:
             summary: "No ready replicas for innodeploy"
-            description: "Deployment helm-dev-innodeploy-chart has 0 available replicas"
+            description: "Deployment innodeploy-app-innodeploy-chart has 0 available replicas"
 
         - alert: InnodeployHighMemory
           expr: |
             sum(
               container_memory_working_set_bytes{
-                namespace="helm-dev",
-                pod=~"helm-dev-innodeploy-chart.*",
+                namespace="dev",
+                pod=~"innodeploy-app-innodeploy-chart.*",
                 container!=""
               }
             ) > 200 * 1024 * 1024

@@ -9,62 +9,53 @@ spec:
   groups:
     - name: innodeploy.rules
       rules:
-
         - alert: InnodeployAppDown
           expr: |
-            absent(
-              up{
-                namespace="dev",
-                service="innodeploy-app-innodeploy-chart"
-              }
-            )
-          for: 1m
-          labels:
-            severity: critical
-          annotations:
-            summary: "Innodeploy app is DOWN"
-            description: "Prometheus cannot reach the app in helm-dev for 1 minute"
-
-        - alert: InnodeployPodCrashLooping
-          expr: |
-            increase(
-              kube_pod_container_status_restarts_total{
-                namespace="dev",
-                pod=~"innodeploy-app-innodeploy-chart.*"
-              }[15m]
-            ) > 3
-          for: 5m
-          labels:
-            severity: warning
-          annotations:
-            summary: "Pod {{ $labels.pod }} is crash-looping"
-            description: "Pod restarted more than 3 times in 15 minutes"
-
-        - alert: InnodeployNoReadyReplicas
-          expr: |
-            kube_deployment_status_replicas_available{
+            up{
               namespace="dev",
-              deployment="innodeploy-app-innodeploy-chart"
+              service="innodeploy-app-innodeploy-chart"
             } == 0
           for: 1m
           labels:
             severity: critical
           annotations:
-            summary: "No ready replicas for innodeploy"
-            description: "Deployment innodeploy-app-innodeploy-chart has 0 available replicas"
+            summary: "InnoDeploy app is DOWN"
+            description: "InnoDeploy app is not responding in dev namespace"
 
-        - alert: InnodeployHighMemory
+        - alert: InnodeployNoReadyReplicas
           expr: |
-            sum(
-              container_memory_working_set_bytes{
-                namespace="dev",
-                pod=~"innodeploy-app-innodeploy-chart.*",
-                container!=""
-              }
-            ) > 200 * 1024 * 1024
+            kube_deployment_status_replicas_available{
+              namespace="dev"
+            } == 0
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "No ready replicas"
+            description: "InnoDeploy has 0 available replicas in dev"
+
+        - alert: InnodeployPodCrashLooping
+          expr: |
+            rate(kube_pod_container_status_restarts_total{
+              namespace="dev",
+              pod=~"innodeploy-app-innodeploy-chart.*"
+            }[5m]) > 0
           for: 5m
           labels:
             severity: warning
           annotations:
-            summary: "Innodeploy memory usage is high"
-            description: "App is using more than 200MB of memory"
+            summary: "Pod crash looping"
+            description: "InnoDeploy pod is restarting too often"
+
+        - alert: InnodeployHighMemory
+          expr: |
+            container_memory_working_set_bytes{
+              namespace="dev",
+              pod=~"innodeploy-app-innodeploy-chart.*"
+            } > 200000000
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High memory usage"
+            description: "InnoDeploy using more than 200MB"

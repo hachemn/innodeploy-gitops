@@ -11,7 +11,7 @@ spec:
       - dev
   selector:
     matchLabels:
-      app: innodeploy-app
+      app.kubernetes.io/name: innodeploy-chart
   endpoints:
     - port: http
       path: /metrics

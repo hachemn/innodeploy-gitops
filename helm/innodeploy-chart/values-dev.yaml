@@ -1,7 +1,7 @@
 replicaCount: 1
 image:
   repository: nourhenhachem/innodeploy-app
-  tag: v1779144982
+  tag: v1779674024
   pullPolicy: Always
 service:
   type: ClusterIP

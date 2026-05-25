@@ -47,7 +47,13 @@
           source:
             repoURL: https://github.com/hachemn/innodeploy-gitops
             targetRevision: main
-            path: apps/dev
+            path: helm/innodeploy-chart
+            helm:
+              valueFiles:
+                - values-dev.yaml
+            helm:
+              valueFiles:
+                - values-dev.yaml
           destination:
             server: https://kubernetes.default.svc
             namespace: dev
@@ -93,3 +99,6 @@
           sed 's/alertmanager-monitoring-kube-prometheus-alertmanager/alertmanager-kube-prometheus-stack-alertmanager/' | \
           kubectl apply -f -
         kubectl rollout restart statefulset/alertmanager-kube-prometheus-stack-alertmanager -n monitoring
+
+    - name: Apply PrometheusRule
+      shell: kubectl apply -f ~/innodeploy/innodeploy-gitops/base/prometheusrule.yaml

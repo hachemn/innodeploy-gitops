@@ -3,44 +3,37 @@ kind: Secret
 metadata:
   name: alertmanager-kube-prometheus-stack-alertmanager
   namespace: monitoring
+
 stringData:
   alertmanager.yaml: |
     global:
       resolve_timeout: 5m
-      smtp_smarthost: 'smtp.gmail.com:587'
-      smtp_from: 'hachemnourhen8@gmail.com'
-      smtp_auth_username: 'hachemnourhen8@gmail.com'
-      smtp_auth_password: 'rpvh zoyx gwpw mfiw'
-      smtp_require_tls: true
+
     route:
       receiver: discord
-      group_wait: 30s
-      group_interval: 5m
-      repeat_interval: 12h
+      group_by: ['alertname', 'namespace', 'app']
+      group_wait: 10s
+      group_interval: 1m
+      repeat_interval: 2h
+
     receivers:
       - name: discord
         discord_configs:
-          - webhook_url: "https://discord.com/api/webhooks/1502017723067138148/ufZtiSP0tLnLvD1zkCno2T1sUH_3K4hejnAkRuR1v7leDZEJ9gPnGsSfTvHLXvbAObtd"
+          - webhook_url: "YOUR_DISCORD_WEBHOOK"
             send_resolved: true
-            title: '{{ if eq .Status "resolved" }} RESOLVED{{ else }} ALERT FIRED{{ end }}'
+            title: '{{ if eq .Status "resolved" }}✅ RESOLVED{{ else }}🚨 FIRING{{ end }}'
             message: |
               {{ range .Alerts }}
               Alert: {{ .Labels.alertname }}
-              Description: {{ .Annotations.description }}
+              App: {{ .Labels.app }}
+              Namespace: {{ .Labels.namespace }}
               Severity: {{ .Labels.severity }}
               Status: {{ .Status }}
               {{ end }}
+
+      - name: email
         email_configs:
-          - to: 'hachemnourhen8@gmail.com'
+          - to: "YOUR_EMAIL"
             send_resolved: true
             headers:
-              subject: '{{ if eq .Status "resolved" }} RESOLVED{{ else }} FIRED{{ end }}: InnoDeploy Alert'
-            html: |
-              <h2>{{ if eq .Status "resolved" }} RESOLVED{{ else }} FIRED{{ end }}</h2>
-              {{ range .Alerts }}
-              <p><b>Alert:</b> {{ .Labels.alertname }}</p>
-              <p><b>Description:</b> {{ .Annotations.description }}</p>
-              <p><b>Severity:</b> {{ .Labels.severity }}</p>
-              <hr>
-              {{ end }}
-type: Opaque
+              subject: '{{ if eq .Status "resolved" }}RESOLVED{{ else }}FIRING{{ end }}: InnoDeploy Alert'

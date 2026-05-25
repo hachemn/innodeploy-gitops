@@ -5,62 +5,44 @@ metadata:
   namespace: monitoring
   labels:
     release: kube-prometheus-stack
+
 spec:
   groups:
     - name: innodeploy.rules
       rules:
+
         - alert: InnodeployAppDown
-          expr: |
-            up{
-              namespace="dev",
-              service="innodeploy-app-innodeploy-chart"
-            } == 0
-            or
-            absent(up{
-              namespace="dev",
-              service="innodeploy-app-innodeploy-chart"
-            })
-          for: 1m
+          expr: up{namespace="dev", service="innodeploy-app-innodeploy-chart"} == 0
+          for: 2m
           labels:
             severity: critical
           annotations:
             summary: "InnoDeploy app is DOWN"
-            description: "InnoDeploy app is not responding in dev namespace"
+            description: "App is not responding"
 
         - alert: InnodeployNoReadyReplicas
-          expr: |
-            kube_deployment_status_replicas_available{
-              namespace="dev"
-            } == 0
-          for: 1m
+          expr: kube_deployment_status_replicas_available{namespace="dev"} == 0
+          for: 2m
           labels:
             severity: critical
           annotations:
             summary: "No ready replicas"
-            description: "InnoDeploy has 0 available replicas in dev"
+            description: "Deployment has 0 available pods"
 
         - alert: InnodeployPodCrashLooping
-          expr: |
-            rate(kube_pod_container_status_restarts_total{
-              namespace="dev",
-              pod=~"innodeploy-app-innodeploy-chart.*"
-            }[5m]) > 0
+          expr: increase(kube_pod_container_status_restarts_total{namespace="dev", pod=~"innodeploy-app-.*"}[10m]) > 3
           for: 5m
           labels:
             severity: warning
           annotations:
-            summary: "Pod crash looping"
-            description: "InnoDeploy pod is restarting too often"
+            summary: "Crash looping pod"
+            description: "Pod restarting too often"
 
         - alert: InnodeployHighMemory
-          expr: |
-            container_memory_working_set_bytes{
-              namespace="dev",
-              pod=~"innodeploy-app-innodeploy-chart.*"
-            } > 200000000
+          expr: sum(container_memory_working_set_bytes{namespace="dev", pod=~"innodeploy-app-.*", container!=""}) > 200000000
           for: 5m
           labels:
             severity: warning
           annotations:
             summary: "High memory usage"
-            description: "InnoDeploy using more than 200MB"
+            description: "Memory > 200MB"

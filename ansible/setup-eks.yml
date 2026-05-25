@@ -15,14 +15,39 @@
         - argocd
         - monitoring
         - dev
-        - helm-dev
+        - argo-rollouts
 
     - name: Install ArgoCD
       shell: kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
       ignore_errors: yes
 
-    - name: Add Prometheus helm repo
-      shell: helm repo add prometheus-community https://prometheus-community.github.io/helm-charts && helm repo update
+    - name: Install Argo Rollouts
+      shell: |
+        kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
+      ignore_errors: yes
+
+    - name: Add Helm repos
+      shell: |
+        helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+        helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+        helm repo add jetstack https://charts.jetstack.io
+        helm repo update
+
+    - name: Install Nginx Ingress Controller
+      shell: |
+        helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
+          --namespace ingress-nginx \
+          --create-namespace \
+          --set controller.admissionWebhooks.enabled=false \
+          --set controller.service.type=LoadBalancer
+
+    - name: Install cert-manager
+      shell: |
+        helm upgrade --install cert-manager jetstack/cert-manager \
+          --namespace cert-manager \
+          --create-namespace \
+          --set crds.enabled=true
+      ignore_errors: yes
 
     - name: Install Prometheus + Grafana
       shell: |
@@ -51,13 +76,12 @@
             helm:
               valueFiles:
                 - values-dev.yaml
-            helm:
-              valueFiles:
-                - values-dev.yaml
           destination:
             server: https://kubernetes.default.svc
             namespace: dev
           syncPolicy:
+            syncOptions:
+              - CreateNamespace=true
             automated:
               prune: true
               selfHeal: true
@@ -95,10 +119,46 @@
     - name: Apply Alertmanager config
       shell: |
         kubectl delete secret alertmanager-kube-prometheus-stack-alertmanager -n monitoring --ignore-not-found
-        cat ~/innodeploy/innodeploy-gitops/alertmanager-config.yaml | \
-          sed 's/alertmanager-monitoring-kube-prometheus-alertmanager/alertmanager-kube-prometheus-stack-alertmanager/' | \
-          kubectl apply -f -
+        kubectl apply -f ~/innodeploy/innodeploy-gitops/alertmanager-config.yaml
         kubectl rollout restart statefulset/alertmanager-kube-prometheus-stack-alertmanager -n monitoring
 
     - name: Apply PrometheusRule
       shell: kubectl apply -f ~/innodeploy/innodeploy-gitops/base/prometheusrule.yaml
+
+    - name: Wait for cert-manager
+      shell: kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=cert-manager -n cert-manager --timeout=120s
+      ignore_errors: yes
+
+    - name: Create ClusterIssuer
+      shell: |
+        kubectl apply -f - <<YAML
+        apiVersion: cert-manager.io/v1
+        kind: ClusterIssuer
+        metadata:
+          name: letsencrypt-prod
+        spec:
+          acme:
+            server: https://acme-v02.api.letsencrypt.org/directory
+            email: hachemnourhen8@gmail.com
+            privateKeySecretRef:
+              name: letsencrypt-prod
+            solvers:
+            - http01:
+                ingress:
+                  class: nginx
+        YAML
+      ignore_errors: yes
+
+    - name: Show app URL
+      shell: |
+        echo "Waiting for LoadBalancer IP..."
+        sleep 30
+        LB=$(kubectl get svc -n ingress-nginx ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+        IP=$(nslookup $LB | grep Address | tail -1 | awk '{print $2}')
+        echo "App URL will be: https://app.${IP}.nip.io"
+      register: app_url
+      ignore_errors: yes
+
+    - name: Display app URL
+      debug:
+        msg: "{{ app_url.stdout }}"

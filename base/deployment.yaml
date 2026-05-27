@@ -6,38 +6,34 @@ metadata:
     app: innodeploy-app
 spec:
   replicas: 1
-
   selector:
     matchLabels:
       app: innodeploy-app
-
   template:
     metadata:
       labels:
         app: innodeploy-app
-
+        app.kubernetes.io/name: innodeploy-chart   # added: matches ServiceMonitor selector
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/path: "/metrics"
         prometheus.io/port: "3000"
-
     spec:
       containers:
         - name: innodeploy-app
           image: nourhenhachem/innodeploy-app:latest
           ports:
             - containerPort: 3000
-
           livenessProbe:
             httpGet:
               path: /
               port: 3000
             initialDelaySeconds: 5
             periodSeconds: 10
-
           readinessProbe:
             httpGet:
               path: /
               port: 3000
             initialDelaySeconds: 5
             periodSeconds: 5
+ 

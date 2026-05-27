@@ -1,31 +1,45 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
+
 metadata:
   name: {{ include "innodeploy-chart.fullname" . }}
+
   labels:
     {{- include "innodeploy-chart.labels" . | nindent 4 }}
+
 spec:
   replicas: {{ .Values.replicaCount }}
+
   revisionHistoryLimit: 2
+
   selector:
     matchLabels:
       {{- include "innodeploy-chart.selectorLabels" . | nindent 6 }}
+
   strategy:
     canary:
       steps:
         - setWeight: 20
-        - pause: {duration: 20}
+        - pause:
+            duration: 20
+
         - setWeight: 50
-        - pause: {duration: 20}
+        - pause:
+            duration: 20
+
   template:
     metadata:
       labels:
         {{- include "innodeploy-chart.selectorLabels" . | nindent 8 }}
+
     spec:
       containers:
-        - name: innodeploy
+        - name: app
+
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}

@@ -1,0 +1,11 @@
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: test-app-dev
+spec:
+  source:
+    repoURL: https://github.com/hachemn/innodeploy-gitops.git
+    path: helm/innodeploy-chart
+  destination:
+    namespace: dev

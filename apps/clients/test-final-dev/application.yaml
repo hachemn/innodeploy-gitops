@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: test-deploy2-dev
+  name: test-final-dev
   namespace: argocd
 spec:
   project: default
@@ -11,7 +11,7 @@ spec:
     path: helm/innodeploy-chart
     helm:
       valueFiles:
-        - ../../apps/clients/test-deploy2-dev/values.yaml
+        - ../../apps/clients/test-final-dev/values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: dev

@@ -1,0 +1,11 @@
+
+replicaCount: 1
+image:
+  repository: nourhenhachem/test-deploy-dev
+  tag: latest
+service:
+  port: 3000
+ingress:
+  enabled: true
+  hosts:
+    - host: test-deploy-dev.192.168.49.2.nip.io

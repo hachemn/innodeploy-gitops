@@ -1,0 +1,11 @@
+
+replicaCount: 1
+image:
+  repository: nourhenhachem/final-test-dev
+  tag: latest
+service:
+  port: 3000
+ingress:
+  enabled: true
+  hosts:
+    - host: final-test-dev.192.168.49.2.nip.io

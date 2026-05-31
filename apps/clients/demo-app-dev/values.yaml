@@ -1,11 +1,20 @@
-
 replicaCount: 1
 image:
   repository: nourhenhachem/demo-app-dev
   tag: latest
+  pullPolicy: IfNotPresent
 service:
+  type: ClusterIP
   port: 3000
 ingress:
   enabled: true
+  className: nginx
   hosts:
     - host: demo-app-dev.192.168.49.2.nip.io
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: demo-app-dev-tls
+      hosts:
+        - demo-app-dev.192.168.49.2.nip.io

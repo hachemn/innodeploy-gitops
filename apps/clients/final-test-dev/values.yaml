@@ -1,11 +1,20 @@
-
 replicaCount: 1
 image:
   repository: nourhenhachem/final-test-dev
   tag: latest
+  pullPolicy: IfNotPresent
 service:
+  type: ClusterIP
   port: 3000
 ingress:
   enabled: true
+  className: nginx
   hosts:
     - host: final-test-dev.192.168.49.2.nip.io
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: final-test-dev-tls
+      hosts:
+        - final-test-dev.192.168.49.2.nip.io

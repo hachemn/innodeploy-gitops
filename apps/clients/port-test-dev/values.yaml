@@ -1,0 +1,20 @@
+replicaCount: 1
+image:
+  repository: nourhenhachem/port-test-dev
+  tag: latest
+  pullPolicy: IfNotPresent
+service:
+  type: ClusterIP
+  port: 3000
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: port-test-dev.192.168.49.2.nip.io
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: port-test-dev-tls
+      hosts:
+        - port-test-dev.192.168.49.2.nip.io

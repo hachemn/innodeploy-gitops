@@ -1,0 +1,22 @@
+replicaCount: 1
+image:
+  repository: nourhenhachem/security-test-dev
+  tag: latest
+  pullPolicy: IfNotPresent
+service:
+  type: ClusterIP
+  port: 80
+container:
+  port: 3000
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: security-test-dev.192.168.49.2.nip.io
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: security-test-dev-tls
+      hosts:
+        - security-test-dev.192.168.49.2.nip.io

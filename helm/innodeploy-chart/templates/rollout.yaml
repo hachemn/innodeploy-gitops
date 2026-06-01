@@ -1,46 +1,61 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
-
 metadata:
   name: {{ include "innodeploy-chart.fullname" . }}
-
   labels:
     {{- include "innodeploy-chart.labels" . | nindent 4 }}
-
 spec:
   replicas: {{ .Values.replicaCount }}
-
   revisionHistoryLimit: 2
-
   selector:
     matchLabels:
       {{- include "innodeploy-chart.selectorLabels" . | nindent 6 }}
-
   strategy:
     canary:
       steps:
         - setWeight: 20
         - pause:
             duration: 20
-
         - setWeight: 50
         - pause:
             duration: 20
-
   template:
     metadata:
       labels:
         {{- include "innodeploy-chart.selectorLabels" . | nindent 8 }}
-
     spec:
       containers:
         - name: app
-
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-
           ports:
             - name: http
               containerPort: {{ .Values.container.port }}
               protocol: TCP
+          env:
+            - name: PORT
+              value: "{{ .Values.container.port }}"
+            - name: NODE_ENV
+              value: "production"
+            - name: HOST
+              value: "0.0.0.0"
+            - name: APP_PORT
+              value: "{{ .Values.container.port }}"
+            - name: SERVER_PORT
+              value: "{{ .Values.container.port }}"
+            - name: HTTP_PORT
+              value: "{{ .Values.container.port }}"
+            - name: WEB_PORT
+              value: "{{ .Values.container.port }}"
+            - name: LISTEN_PORT
+              value: "{{ .Values.container.port }}"
+            - name: BIND
+              value: "0.0.0.0:{{ .Values.container.port }}"
+            - name: FLASK_RUN_PORT
+              value: "{{ .Values.container.port }}"
+            - name: GUNICORN_PORT
+              value: "{{ .Values.container.port }}"
+            - name: UVICORN_PORT
+              value: "{{ .Values.container.port }}"
+            - name: ASPNETCORE_URLS
+              value: "http://0.0.0.0:{{ .Values.container.port }}"

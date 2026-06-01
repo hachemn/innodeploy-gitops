@@ -1,29 +1,25 @@
 replicaCount: 1
-
 image:
   repository: nourhenhachem/innodeploy-app
   pullPolicy: IfNotPresent
   tag: latest
-
 service:
   type: ClusterIP
+  port: 80
+container:
   port: 3000
-
 ingress:
   enabled: true
   className: nginx
-
   hosts:
     - host: helm.local
       paths:
         - path: /
           pathType: Prefix
-
   tls:
     - secretName: local-tls
       hosts:
         - helm.local
-
 autoscaling:
   enabled: false
 serviceAccount:

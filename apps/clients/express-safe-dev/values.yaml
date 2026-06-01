@@ -1,0 +1,22 @@
+replicaCount: 1
+image:
+  repository: nourhenhachem/express-safe-dev
+  tag: latest
+  pullPolicy: IfNotPresent
+service:
+  type: ClusterIP
+  port: 80
+container:
+  port: 3000
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: express-safe-dev.192.168.49.2.nip.io
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: express-safe-dev-tls
+      hosts:
+        - express-safe-dev.192.168.49.2.nip.io

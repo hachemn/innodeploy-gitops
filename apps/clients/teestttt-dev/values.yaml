@@ -1,0 +1,22 @@
+replicaCount: 1
+image:
+  repository: nourhenhachem/teestttt-dev
+  tag: latest
+  pullPolicy: IfNotPresent
+service:
+  type: ClusterIP
+  port: 80
+container:
+  port: 3000
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: teestttt-dev.192.168.49.2.nip.io
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: teestttt-dev-tls
+      hosts:
+        - teestttt-dev.192.168.49.2.nip.io
